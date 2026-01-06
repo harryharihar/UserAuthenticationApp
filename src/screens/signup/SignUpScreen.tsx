@@ -20,6 +20,7 @@ import {styles} from './signUpStyle';
 type RootStackParamList = {
   Login: undefined;
   SignUp: undefined;
+  Home: {name: string; email: string};
 };
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'SignUp'>;
@@ -34,6 +35,11 @@ const SignUpScreen: React.FC = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [errors, setErrors] = useState<{name?: string; email?: string; password?: string}>({});
 
+  const validateEmail = (emailValue: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(emailValue);
+  };
+
   const validateForm = useCallback(() => {
     const newErrors: {name?: string; email?: string; password?: string} = {};
     if (!name.trim()) {
@@ -41,9 +47,13 @@ const SignUpScreen: React.FC = () => {
     }
     if (!email.trim()) {
       newErrors.email = Strings.emailRequired;
+    } else if (!validateEmail(email.trim())) {
+      newErrors.email = Strings.emailInvalid;
     }
     if (!password.trim()) {
       newErrors.password = Strings.passwordRequired;
+    } else if (password.length < 6) {
+      newErrors.password = Strings.passwordTooShort;
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -51,9 +61,9 @@ const SignUpScreen: React.FC = () => {
 
   const handleSignUp = useCallback(() => {
     if (validateForm()) {
-      console.log('Sign Up pressed', {name, email, password});
+      navigation.navigate('Home', {name: name, email: email});
     }
-  }, [name, email, password, validateForm]);
+  }, [name, email, navigation, validateForm]);
 
   const handleSignIn = useCallback(() => {
     navigation.navigate('Login');
@@ -114,6 +124,8 @@ const SignUpScreen: React.FC = () => {
                   }}
                   autoCapitalize="words"
                   autoCorrect={false}
+                  textContentType="oneTimeCode"
+                  autoComplete="off"
                 />
               </View>
               <View style={styles.errorContainer}>
@@ -144,6 +156,8 @@ const SignUpScreen: React.FC = () => {
                   keyboardType="email-address"
                   autoCapitalize="none"
                   autoCorrect={false}
+                  textContentType="oneTimeCode"
+                  autoComplete="off"
                 />
               </View>
               <View style={styles.errorContainer}>
@@ -172,6 +186,8 @@ const SignUpScreen: React.FC = () => {
                     }
                   }}
                   secureTextEntry={!isPasswordVisible}
+                  textContentType="oneTimeCode"
+                  autoComplete="off"
                 />
                 <TouchableOpacity
                   style={styles.eyeButton}

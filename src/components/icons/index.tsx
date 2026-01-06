@@ -122,3 +122,42 @@ export const EyeIcon = ({size = 20, color = '#667EEA', visible = true}: EyeIconP
     )}
   </View>
 );
+
+export const LogoutIcon = ({size = 20, color = '#FFFFFF'}: IconProps) => (
+  <View style={{width: size, height: size, justifyContent: 'center', alignItems: 'center'}}>
+    <View
+      style={{
+        width: size * 0.6,
+        height: size * 0.7,
+        borderWidth: 1.5,
+        borderColor: color,
+        borderRightWidth: 0,
+        borderTopLeftRadius: 3,
+        borderBottomLeftRadius: 3,
+      }}
+    />
+    <View
+      style={{
+        position: 'absolute',
+        right: size * 0.1,
+        width: size * 0.5,
+        height: 1.5,
+        backgroundColor: color,
+      }}
+    />
+    <View
+      style={{
+        position: 'absolute',
+        right: size * 0.1,
+        width: 0,
+        height: 0,
+        borderTopWidth: size * 0.15,
+        borderBottomWidth: size * 0.15,
+        borderLeftWidth: size * 0.2,
+        borderTopColor: 'transparent',
+        borderBottomColor: 'transparent',
+        borderLeftColor: color,
+      }}
+    />
+  </View>
+);

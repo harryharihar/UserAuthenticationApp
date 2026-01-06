@@ -30,7 +30,16 @@ export const Strings = {
   // Error Messages
   nameRequired: 'Name is required',
   emailRequired: 'Email is required',
+  emailInvalid: 'Please enter a valid email address',
   passwordRequired: 'Password is required',
+  passwordTooShort: 'Password must be at least 6 characters',
+
+  // Home Screen
+  homeTitle: 'Profile',
+  welcomeBack: 'Welcome back,',
+  nameLabel: 'Full Name',
+  emailLabel: 'Email Address',
+  logoutButton: 'Logout',
 } as const;
 
 export type StringsType = typeof Strings;

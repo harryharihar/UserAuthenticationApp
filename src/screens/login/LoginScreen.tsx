@@ -20,6 +20,7 @@ import {styles} from './loginStyle';
 type RootStackParamList = {
   Login: undefined;
   SignUp: undefined;
+  Home: {name: string; email: string};
 };
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Login'>;
@@ -33,13 +34,22 @@ const LoginScreen: React.FC = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [errors, setErrors] = useState<{email?: string; password?: string}>({});
 
+  const validateEmail = (emailValue: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(emailValue);
+  };
+
   const validateForm = useCallback(() => {
     const newErrors: {email?: string; password?: string} = {};
     if (!email.trim()) {
       newErrors.email = Strings.emailRequired;
+    } else if (!validateEmail(email.trim())) {
+      newErrors.email = Strings.emailInvalid;
     }
     if (!password.trim()) {
       newErrors.password = Strings.passwordRequired;
+    } else if (password.length < 6) {
+      newErrors.password = Strings.passwordTooShort;
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -47,9 +57,10 @@ const LoginScreen: React.FC = () => {
 
   const handleLogin = useCallback(() => {
     if (validateForm()) {
-      console.log('Login pressed', {email, password});
+      const userName = email.split('@')[0];
+      navigation.navigate('Home', {name: userName, email: email});
     }
-  }, [email, password, validateForm]);
+  }, [email, navigation, validateForm]);
 
   const handleSignUp = useCallback(() => {
     navigation.navigate('SignUp');
@@ -111,6 +122,8 @@ const LoginScreen: React.FC = () => {
                   keyboardType="email-address"
                   autoCapitalize="none"
                   autoCorrect={false}
+                  textContentType="oneTimeCode"
+                  autoComplete="off"
                 />
               </View>
               <View style={styles.errorContainer}>
@@ -139,6 +152,8 @@ const LoginScreen: React.FC = () => {
                     }
                   }}
                   secureTextEntry={!isPasswordVisible}
+                  textContentType="oneTimeCode"
+                  autoComplete="off"
                 />
                 <TouchableOpacity
                   style={styles.eyeButton}

@@ -1,0 +1,166 @@
+import {StyleSheet, Dimensions} from 'react-native';
+import {Colors} from '../../constants/colors';
+
+const {height} = Dimensions.get('window');
+
+export const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: Colors.background,
+  },
+  backgroundDecoration: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
+  circle1: {
+    position: 'absolute',
+    width: 300,
+    height: 300,
+    borderRadius: 150,
+    backgroundColor: Colors.overlayPurple,
+    top: -100,
+    right: -80,
+  },
+  circle2: {
+    position: 'absolute',
+    width: 200,
+    height: 200,
+    borderRadius: 100,
+    backgroundColor: Colors.overlayPink,
+    top: height * 0.5,
+    left: -60,
+  },
+  circle3: {
+    position: 'absolute',
+    width: 150,
+    height: 150,
+    borderRadius: 75,
+    backgroundColor: Colors.overlayPurple,
+    bottom: 50,
+    right: -40,
+  },
+  safeArea: {
+    flex: 1,
+  },
+  content: {
+    flex: 1,
+    paddingHorizontal: 28,
+  },
+  header: {
+    paddingTop: 20,
+    paddingBottom: 10,
+  },
+  headerTitle: {
+    fontSize: 28,
+    fontWeight: '700',
+    color: Colors.textDark,
+  },
+  profileSection: {
+    alignItems: 'center',
+    marginTop: 40,
+    marginBottom: 40,
+  },
+  avatarContainer: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    backgroundColor: Colors.primary,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: Colors.primary,
+    shadowOffset: {width: 0, height: 8},
+    shadowOpacity: 0.3,
+    shadowRadius: 16,
+    elevation: 12,
+  },
+  avatarText: {
+    fontSize: 36,
+    fontWeight: '700',
+    color: Colors.white,
+  },
+  welcomeText: {
+    fontSize: 16,
+    fontWeight: '400',
+    color: Colors.textSecondary,
+    marginTop: 20,
+  },
+  nameText: {
+    fontSize: 24,
+    fontWeight: '600',
+    color: Colors.textDark,
+    marginTop: 8,
+  },
+  infoSection: {
+    marginBottom: 40,
+  },
+  infoCard: {
+    backgroundColor: Colors.white,
+    borderRadius: 20,
+    padding: 20,
+    shadowColor: Colors.black,
+    shadowOffset: {width: 0, height: 4},
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
+    elevation: 6,
+  },
+  infoRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 12,
+  },
+  infoIcon: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: Colors.overlayPurple,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  infoContent: {
+    marginLeft: 16,
+    flex: 1,
+  },
+  infoLabel: {
+    fontSize: 13,
+    fontWeight: '400',
+    color: Colors.textSecondary,
+    marginBottom: 4,
+  },
+  infoValue: {
+    fontSize: 17,
+    fontWeight: '500',
+    color: Colors.textDark,
+  },
+  divider: {
+    height: 1,
+    backgroundColor: Colors.inputBorder,
+    marginVertical: 8,
+  },
+  logoutSection: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    paddingBottom: 30,
+  },
+  logoutButton: {
+    height: 58,
+    backgroundColor: Colors.error,
+    borderRadius: 16,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: Colors.error,
+    shadowOffset: {width: 0, height: 8},
+    shadowOpacity: 0.35,
+    shadowRadius: 12,
+    elevation: 10,
+  },
+  logoutButtonText: {
+    color: Colors.white,
+    fontSize: 18,
+    fontWeight: '600',
+    marginLeft: 10,
+  },
+});
