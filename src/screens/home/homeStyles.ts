@@ -1,5 +1,5 @@
-import {StyleSheet} from 'react-native';
-import {Colors} from '../../constants/colors';
+import { StyleSheet } from 'react-native';
+import { Colors } from '../../constants/colors';
 
 export const styles = StyleSheet.create({
   container: {
@@ -23,7 +23,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: Colors.primary,
-    shadowOffset: {width: 0, height: 4},
+    shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
     elevation: 6,

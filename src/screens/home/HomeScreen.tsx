@@ -1,13 +1,13 @@
-import React, {useCallback} from 'react';
-import {StatusBar, View, Text, ScrollView} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {UserIcon, MailIcon, LogoutIcon} from '../../components/icons';
-import {AppHeader, PrimaryButton, Card} from '../../components/common';
-import {Colors} from '../../constants/colors';
-import {Strings} from '../../constants/strings';
-import {useAuth} from '../../context/AuthContext';
-import {styles} from './homeStyles';
+import React, { useCallback } from 'react';
+import { StatusBar, View, Text, ScrollView } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { UserIcon, MailIcon, LogoutIcon } from '../../components/icons';
+import { AppHeader, PrimaryButton, Card } from '../../components/common';
+import { Colors } from '../../constants/colors';
+import { Strings } from '../../constants/strings';
+import { useAuth } from '../../context/AuthContext';
+import { styles } from './homeStyles';
 
 type RootStackParamList = {
   Login: undefined;
@@ -19,11 +19,11 @@ type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Home'>;
 
 const HomeScreen: React.FC = () => {
   const navigation = useNavigation<NavigationProp>();
-  const {user, logout} = useAuth();
+  const { user, logout } = useAuth();
 
   const handleLogout = useCallback(() => {
     logout();
-    navigation.reset({index: 0, routes: [{name: 'Login'}]});
+    navigation.reset({ index: 0, routes: [{ name: 'Login' }] });
   }, [logout, navigation]);
 
   const getInitials = (fullName: string) => {
@@ -39,7 +39,11 @@ const HomeScreen: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="light-content" translucent backgroundColor="transparent" />
+      <StatusBar
+        barStyle="light-content"
+        translucent
+        backgroundColor="transparent"
+      />
       <AppHeader screenTitle={Strings.homeTitle} logoSize={40} />
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         <Card style={styles.profileCard}>

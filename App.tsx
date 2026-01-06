@@ -1,10 +1,10 @@
 import React from 'react';
-import {View, ActivityIndicator, StyleSheet} from 'react-native';
-import {SafeAreaProvider} from 'react-native-safe-area-context';
-import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {AuthProvider, useAuth} from './src/context/AuthContext';
-import {Colors} from './src/constants/colors';
+import { View, ActivityIndicator, StyleSheet } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { AuthProvider, useAuth } from './src/context/AuthContext';
+import { Colors } from './src/constants/colors';
 import LoginScreen from './src/screens/login/LoginScreen';
 import SignUpScreen from './src/screens/signup/SignUpScreen';
 import HomeScreen from './src/screens/home/HomeScreen';
@@ -25,7 +25,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
  * then navigates to Home if user is logged in, or Login if not.
  */
 const AppNavigator: React.FC = () => {
-  const {isLoading, isAuthenticated} = useAuth();
+  const { isLoading, isAuthenticated } = useAuth();
 
   // Show loading screen while checking persisted auth state
   if (isLoading) {
@@ -42,7 +42,8 @@ const AppNavigator: React.FC = () => {
         initialRouteName={isAuthenticated ? 'Home' : 'Login'}
         screenOptions={{
           headerShown: false,
-        }}>
+        }}
+      >
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="SignUp" component={SignUpScreen} />
         <Stack.Screen name="Home" component={HomeScreen} />
