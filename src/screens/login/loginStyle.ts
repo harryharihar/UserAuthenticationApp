@@ -1,0 +1,168 @@
+import {StyleSheet, Dimensions} from 'react-native';
+import {Colors} from '../../constants/colors';
+
+const {height} = Dimensions.get('window');
+
+export const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: Colors.background,
+  },
+  backgroundDecoration: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
+  circle1: {
+    position: 'absolute',
+    width: 300,
+    height: 300,
+    borderRadius: 150,
+    backgroundColor: Colors.overlayPurple,
+    top: -100,
+    right: -80,
+  },
+  circle2: {
+    position: 'absolute',
+    width: 200,
+    height: 200,
+    borderRadius: 100,
+    backgroundColor: Colors.overlayPink,
+    top: height * 0.3,
+    left: -60,
+  },
+  circle3: {
+    position: 'absolute',
+    width: 150,
+    height: 150,
+    borderRadius: 75,
+    backgroundColor: Colors.overlayPurple,
+    bottom: 100,
+    right: -40,
+  },
+  safeArea: {
+    flex: 1,
+  },
+  keyboardView: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  content: {
+    flex: 1,
+    paddingHorizontal: 28,
+    justifyContent: 'center',
+  },
+  logoContainer: {
+    alignItems: 'center',
+    marginBottom: 50,
+  },
+  logoCircle: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    backgroundColor: Colors.primary,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: Colors.primary,
+    shadowOffset: {width: 0, height: 8},
+    shadowOpacity: 0.3,
+    shadowRadius: 16,
+    elevation: 12,
+  },
+  logoText: {
+    fontSize: 40,
+    fontWeight: '700',
+    color: Colors.white,
+  },
+  appName: {
+    fontSize: 32,
+    fontWeight: '600',
+    color: Colors.textDark,
+    marginTop: 16,
+  },
+  tagline: {
+    fontSize: 16,
+    fontWeight: '400',
+    color: Colors.textMuted,
+    marginTop: 10,
+  },
+  formContainer: {
+    marginTop: 20,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: '600',
+    color: Colors.textDark,
+    marginBottom: 8,
+  },
+  subtitle: {
+    fontSize: 17,
+    fontWeight: '400',
+    color: Colors.textSecondary,
+    marginBottom: 32,
+  },
+  inputWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: Colors.inputBackground,
+    borderRadius: 16,
+    marginBottom: 18,
+    paddingHorizontal: 18,
+    height: 58,
+    borderWidth: 1,
+    borderColor: Colors.inputBorder,
+    shadowColor: Colors.black,
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.04,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  inputIcon: {
+    marginRight: 14,
+  },
+  input: {
+    flex: 1,
+    fontSize: 17,
+    fontWeight: '400',
+    color: Colors.textPrimary,
+  },
+  eyeButton: {
+    padding: 6,
+  },
+  loginButton: {
+    height: 58,
+    backgroundColor: Colors.primary,
+    borderRadius: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 10,
+    shadowColor: Colors.primary,
+    shadowOffset: {width: 0, height: 8},
+    shadowOpacity: 0.35,
+    shadowRadius: 12,
+    elevation: 10,
+  },
+  loginButtonText: {
+    color: Colors.white,
+    fontSize: 18,
+    fontWeight: '600',
+  },
+  signUpContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 32,
+    marginBottom: 20,
+  },
+  signUpText: {
+    fontSize: 16,
+    fontWeight: '400',
+    color: Colors.textSecondary,
+  },
+  signUpLink: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: Colors.primary,
+  },
+});
