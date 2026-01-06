@@ -12,29 +12,33 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {MailIcon, LockIcon, EyeIcon} from '../../components/icons';
+import {UserIcon, MailIcon, LockIcon, EyeIcon} from '../../components/icons';
 import {Colors} from '../../constants/colors';
 import {Strings} from '../../constants/strings';
-import {styles} from './loginStyle';
+import {styles} from './signUpStyle';
 
 type RootStackParamList = {
   Login: undefined;
   SignUp: undefined;
 };
 
-type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Login'>;
+type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'SignUp'>;
 
 const ICON_SIZE = 22;
 
-const LoginScreen: React.FC = () => {
+const SignUpScreen: React.FC = () => {
   const navigation = useNavigation<NavigationProp>();
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [errors, setErrors] = useState<{email?: string; password?: string}>({});
+  const [errors, setErrors] = useState<{name?: string; email?: string; password?: string}>({});
 
   const validateForm = useCallback(() => {
-    const newErrors: {email?: string; password?: string} = {};
+    const newErrors: {name?: string; email?: string; password?: string} = {};
+    if (!name.trim()) {
+      newErrors.name = Strings.nameRequired;
+    }
     if (!email.trim()) {
       newErrors.email = Strings.emailRequired;
     }
@@ -43,16 +47,16 @@ const LoginScreen: React.FC = () => {
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
-  }, [email, password]);
-
-  const handleLogin = useCallback(() => {
-    if (validateForm()) {
-      console.log('Login pressed', {email, password});
-    }
-  }, [email, password, validateForm]);
+  }, [name, email, password]);
 
   const handleSignUp = useCallback(() => {
-    navigation.navigate('SignUp');
+    if (validateForm()) {
+      console.log('Sign Up pressed', {name, email, password});
+    }
+  }, [name, email, password, validateForm]);
+
+  const handleSignIn = useCallback(() => {
+    navigation.navigate('Login');
   }, [navigation]);
 
   const togglePasswordVisibility = useCallback(() => {
@@ -86,8 +90,37 @@ const LoginScreen: React.FC = () => {
             </View>
 
             <View style={styles.formContainer}>
-              <Text style={styles.title}>{Strings.welcomeTitle}</Text>
-              <Text style={styles.subtitle}>{Strings.welcomeSubtitle}</Text>
+              <Text style={styles.title}>{Strings.signUpTitle}</Text>
+              <Text style={styles.subtitle}>{Strings.signUpSubtitle}</Text>
+
+              <View
+                style={[
+                  styles.inputWrapper,
+                  errors.name && styles.inputWrapperError,
+                ]}>
+                <View style={styles.inputIcon}>
+                  <UserIcon size={ICON_SIZE} color={errors.name ? Colors.error : Colors.textSecondary} />
+                </View>
+                <TextInput
+                  style={styles.input}
+                  placeholder={Strings.namePlaceholder}
+                  placeholderTextColor={Colors.textSecondary}
+                  value={name}
+                  onChangeText={text => {
+                    setName(text);
+                    if (errors.name) {
+                      setErrors(prev => ({...prev, name: undefined}));
+                    }
+                  }}
+                  autoCapitalize="words"
+                  autoCorrect={false}
+                />
+              </View>
+              <View style={styles.errorContainer}>
+                {errors.name && (
+                  <Text style={styles.errorText}>{errors.name}</Text>
+                )}
+              </View>
 
               <View
                 style={[
@@ -157,16 +190,16 @@ const LoginScreen: React.FC = () => {
               </View>
 
               <TouchableOpacity
-                style={styles.loginButton}
-                onPress={handleLogin}
+                style={styles.signUpButton}
+                onPress={handleSignUp}
                 activeOpacity={0.8}>
-                <Text style={styles.loginButtonText}>{Strings.signInButton}</Text>
+                <Text style={styles.signUpButtonText}>{Strings.signUpButton}</Text>
               </TouchableOpacity>
 
-              <View style={styles.signUpContainer}>
-                <Text style={styles.signUpText}>{Strings.noAccountText}</Text>
-                <TouchableOpacity onPress={handleSignUp}>
-                  <Text style={styles.signUpLink}>{Strings.signUpLink}</Text>
+              <View style={styles.signInContainer}>
+                <Text style={styles.signInText}>{Strings.haveAccountText}</Text>
+                <TouchableOpacity onPress={handleSignIn}>
+                  <Text style={styles.signInLink}>{Strings.signInLink}</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -177,4 +210,4 @@ const LoginScreen: React.FC = () => {
   );
 };
 
-export default LoginScreen;
+export default SignUpScreen;

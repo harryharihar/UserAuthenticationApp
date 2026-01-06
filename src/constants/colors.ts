@@ -26,6 +26,10 @@ export const Colors = {
   // Overlay colors
   overlayPurple: 'rgba(108,99,255,0.08)',
   overlayPink: 'rgba(255,107,107,0.06)',
+
+  // Error colors
+  error: '#DC3545',
+  errorBorder: '#DC3545',
 } as const;
 
 export type ColorType = typeof Colors;

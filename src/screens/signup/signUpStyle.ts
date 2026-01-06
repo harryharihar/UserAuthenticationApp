@@ -56,7 +56,7 @@ export const styles = StyleSheet.create({
   },
   logoContainer: {
     alignItems: 'center',
-    marginBottom: 50,
+    marginBottom: 40,
   },
   logoCircle: {
     width: 100,
@@ -130,7 +130,7 @@ export const styles = StyleSheet.create({
   eyeButton: {
     padding: 6,
   },
-  loginButton: {
+  signUpButton: {
     height: 58,
     backgroundColor: Colors.primary,
     borderRadius: 16,
@@ -143,23 +143,23 @@ export const styles = StyleSheet.create({
     shadowRadius: 12,
     elevation: 10,
   },
-  loginButtonText: {
+  signUpButtonText: {
     color: Colors.white,
     fontSize: 18,
     fontWeight: '600',
   },
-  signUpContainer: {
+  signInContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     marginTop: 32,
     marginBottom: 20,
   },
-  signUpText: {
+  signInText: {
     fontSize: 16,
     fontWeight: '400',
     color: Colors.textSecondary,
   },
-  signUpLink: {
+  signInLink: {
     fontSize: 16,
     fontWeight: '600',
     color: Colors.primary,

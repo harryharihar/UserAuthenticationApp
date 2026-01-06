@@ -65,6 +65,29 @@ export const LockIcon = ({size = 20, color = '#9CA3AF'}: IconProps) => (
   </View>
 );
 
+export const UserIcon = ({size = 20, color = '#9CA3AF'}: IconProps) => (
+  <View style={{width: size, height: size, justifyContent: 'center', alignItems: 'center'}}>
+    <View
+      style={{
+        width: size * 0.4,
+        height: size * 0.4,
+        borderRadius: size * 0.2,
+        backgroundColor: color,
+        marginBottom: size * 0.05,
+      }}
+    />
+    <View
+      style={{
+        width: size * 0.7,
+        height: size * 0.35,
+        backgroundColor: color,
+        borderTopLeftRadius: size * 0.35,
+        borderTopRightRadius: size * 0.35,
+      }}
+    />
+  </View>
+);
+
 export const EyeIcon = ({size = 20, color = '#667EEA', visible = true}: EyeIconProps) => (
   <View style={{width: size, height: size, justifyContent: 'center', alignItems: 'center'}}>
     <View
