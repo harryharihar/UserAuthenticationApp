@@ -1,4 +1,4 @@
-import React, {useState, useCallback} from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   StatusBar,
   View,
@@ -9,14 +9,19 @@ import {
   ScrollView,
   Alert,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {MailIcon, LockIcon, EyeIcon, CheckIcon} from '../../components/icons';
-import {AppHeader, InputField, PrimaryButton, Card} from '../../components/common';
-import {Colors} from '../../constants/colors';
-import {Strings} from '../../constants/strings';
-import {useAuth} from '../../context/AuthContext';
-import {styles} from './loginStyles';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { MailIcon, LockIcon, EyeIcon, CheckIcon } from '../../components/icons';
+import {
+  AppHeader,
+  InputField,
+  PrimaryButton,
+  Card,
+} from '../../components/common';
+import { Colors } from '../../constants/colors';
+import { Strings } from '../../constants/strings';
+import { useAuth } from '../../context/AuthContext';
+import { styles } from './loginStyles';
 
 type RootStackParamList = {
   Login: undefined;
@@ -28,18 +33,21 @@ type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Login'>;
 
 const LoginScreen: React.FC = () => {
   const navigation = useNavigation<NavigationProp>();
-  const {login} = useAuth();
+  const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [errors, setErrors] = useState<{email?: string; password?: string}>({});
+  const [errors, setErrors] = useState<{ email?: string; password?: string }>(
+    {},
+  );
 
-  const validateEmail = (value: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+  const validateEmail = (value: string) =>
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
   const isEmailValid = email.trim() !== '' && validateEmail(email.trim());
 
   const validateForm = useCallback(() => {
-    const newErrors: {email?: string; password?: string} = {};
+    const newErrors: { email?: string; password?: string } = {};
     if (!email.trim()) {
       newErrors.email = Strings.emailRequired;
     } else if (!validateEmail(email.trim())) {
@@ -60,11 +68,15 @@ const LoginScreen: React.FC = () => {
       try {
         const result = await login(email, password);
         if (result.success) {
-          navigation.reset({index: 0, routes: [{name: 'Home'}]});
+          navigation.reset({ index: 0, routes: [{ name: 'Home' }] });
         } else if (result.error === 'not_registered') {
-          Alert.alert(Strings.error, Strings.userNotRegistered, [{text: Strings.ok}]);
+          Alert.alert(Strings.error, Strings.userNotRegistered, [
+            { text: Strings.ok },
+          ]);
         } else if (result.error === 'invalid_password') {
-          Alert.alert(Strings.error, Strings.invalidPassword, [{text: Strings.ok}]);
+          Alert.alert(Strings.error, Strings.invalidPassword, [
+            { text: Strings.ok },
+          ]);
         }
       } finally {
         setIsLoading(false);
@@ -73,43 +85,83 @@ const LoginScreen: React.FC = () => {
   }, [email, password, login, navigation, validateForm]);
 
   const clearError = (field: 'email' | 'password') => {
-    if (errors[field]) setErrors(prev => ({...prev, [field]: undefined}));
+    if (errors[field]) setErrors(prev => ({ ...prev, [field]: undefined }));
   };
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="light-content" translucent backgroundColor="transparent" />
+      <StatusBar
+        barStyle="light-content"
+        translucent
+        backgroundColor="transparent"
+      />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.flex}>
+        style={styles.flex}
+      >
         <ScrollView
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
-          keyboardShouldPersistTaps="handled">
+          keyboardShouldPersistTaps="handled"
+        >
           <AppHeader screenTitle={Strings.loginTitle} />
           <View style={styles.formSection}>
             <Card>
               <InputField
                 label="Email Address"
-                icon={<MailIcon size={20} color={errors.email ? Colors.error : Colors.textSecondary} />}
+                icon={
+                  <MailIcon
+                    size={20}
+                    color={errors.email ? Colors.error : Colors.textSecondary}
+                  />
+                }
                 placeholder={Strings.emailPlaceholder}
                 value={email}
-                onChangeText={text => { setEmail(text); clearError('email'); }}
+                onChangeText={text => {
+                  setEmail(text);
+                  clearError('email');
+                }}
                 keyboardType="email-address"
                 autoCapitalize="none"
+                autoComplete="off"
+                textContentType="none"
+                importantForAutofill="no"
                 error={errors.email}
-                rightIcon={isEmailValid ? <CheckIcon size={20} color={Colors.success} /> : undefined}
+                rightIcon={
+                  isEmailValid ? (
+                    <CheckIcon size={20} color={Colors.success} />
+                  ) : undefined
+                }
                 editable={!isLoading}
               />
               <InputField
                 label="Password"
-                icon={<LockIcon size={20} color={errors.password ? Colors.error : Colors.textSecondary} />}
+                icon={
+                  <LockIcon
+                    size={20}
+                    color={
+                      errors.password ? Colors.error : Colors.textSecondary
+                    }
+                  />
+                }
                 placeholder={Strings.passwordPlaceholder}
                 value={password}
-                onChangeText={text => { setPassword(text); clearError('password'); }}
+                onChangeText={text => {
+                  setPassword(text);
+                  clearError('password');
+                }}
                 secureTextEntry={!isPasswordVisible}
+                autoComplete="off"
+                textContentType="none"
+                importantForAutofill="no"
                 error={errors.password}
-                rightIcon={<EyeIcon size={20} color={Colors.textSecondary} visible={isPasswordVisible} />}
+                rightIcon={
+                  <EyeIcon
+                    size={20}
+                    color={Colors.textSecondary}
+                    visible={isPasswordVisible}
+                  />
+                }
                 onRightIconPress={() => setIsPasswordVisible(prev => !prev)}
                 editable={!isLoading}
               />
@@ -122,7 +174,10 @@ const LoginScreen: React.FC = () => {
             </Card>
             <View style={styles.linkContainer}>
               <Text style={styles.linkText}>{Strings.noAccountText}</Text>
-              <TouchableOpacity onPress={() => navigation.navigate('SignUp')} disabled={isLoading}>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('SignUp')}
+                disabled={isLoading}
+              >
                 <Text style={styles.link}>{Strings.signUpLink}</Text>
               </TouchableOpacity>
             </View>

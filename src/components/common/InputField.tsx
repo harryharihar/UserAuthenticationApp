@@ -1,7 +1,13 @@
 import React from 'react';
-import {View, Text, TextInput, TouchableOpacity, TextInputProps} from 'react-native';
-import {Colors} from '../../constants/colors';
-import {styles} from './styles/inputFieldStyles';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  TextInputProps,
+} from 'react-native';
+import { Colors } from '../../constants/colors';
+import { styles } from './styles/inputFieldStyles';
 
 interface InputFieldProps extends Omit<TextInputProps, 'style'> {
   label: string;
@@ -27,6 +33,9 @@ export const InputField: React.FC<InputFieldProps> = ({
         <TextInput
           style={styles.input}
           placeholderTextColor={Colors.textSecondary}
+          autoComplete="off"
+          importantForAutofill="no"
+          textContentType="none"
           {...textInputProps}
         />
         {rightIcon && (

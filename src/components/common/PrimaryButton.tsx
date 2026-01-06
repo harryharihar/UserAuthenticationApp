@@ -1,7 +1,12 @@
 import React from 'react';
-import {TouchableOpacity, Text, ActivityIndicator, ViewStyle} from 'react-native';
-import {Colors} from '../../constants/colors';
-import {styles} from './styles/primaryButtonStyles';
+import {
+  TouchableOpacity,
+  Text,
+  ActivityIndicator,
+  ViewStyle,
+} from 'react-native';
+import { Colors } from '../../constants/colors';
+import { styles } from './styles/primaryButtonStyles';
 
 interface PrimaryButtonProps {
   title: string;
@@ -28,19 +33,22 @@ export const PrimaryButton: React.FC<PrimaryButtonProps> = ({
     <TouchableOpacity
       style={[
         styles.button,
-        {backgroundColor, shadowColor: backgroundColor},
+        { backgroundColor, shadowColor: backgroundColor },
         (isLoading || disabled) && styles.disabled,
         style,
       ]}
       onPress={onPress}
       activeOpacity={0.8}
-      disabled={isLoading || disabled}>
+      disabled={isLoading || disabled}
+    >
       {isLoading ? (
         <ActivityIndicator color={Colors.white} />
       ) : (
         <>
           {icon}
-          <Text style={[styles.text, icon && styles.textWithIcon]}>{title}</Text>
+          <Text style={[styles.text, icon ? styles.textWithIcon : undefined]}>
+            {title}
+          </Text>
         </>
       )}
     </TouchableOpacity>
