@@ -1,16 +1,11 @@
 export const Strings = {
   // App
-  appName: 'User Auth',
-  appTagline: 'Secure. Simple. Swift.',
-  logoText: 'UA',
+  appName: 'User Authentication',
 
-  // Login Screen
-  welcomeTitle: 'Welcome Back',
-  welcomeSubtitle: 'Sign in to continue',
-
-  // Sign Up Screen
-  signUpTitle: 'Create Account',
-  signUpSubtitle: 'Sign up to get started',
+  // Screen Titles
+  loginTitle: 'Login',
+  createAccountTitle: 'Create Account',
+  homeTitle: 'Profile',
 
   // Input Placeholders
   namePlaceholder: 'Full Name',
@@ -18,28 +13,32 @@ export const Strings = {
   passwordPlaceholder: 'Password',
 
   // Buttons
-  signInButton: 'Sign In',
-  signUpButton: 'Sign Up',
+  logInButton: 'Log in',
+  signUpButton: 'Sign up',
+  logoutButton: 'Logout',
 
   // Links
   noAccountText: "Don't have an account? ",
   signUpLink: 'Sign Up',
   haveAccountText: 'Already have an account? ',
-  signInLink: 'Sign In',
+  loginLink: 'Login',
 
-  // Error Messages
-  nameRequired: 'Name is required',
-  emailRequired: 'Email is required',
-  emailInvalid: 'Please enter a valid email address',
-  passwordRequired: 'Password is required',
-  passwordTooShort: 'Password must be at least 6 characters',
-
-  // Home Screen
-  homeTitle: 'Profile',
-  welcomeBack: 'Welcome back,',
+  // Labels
   nameLabel: 'Full Name',
   emailLabel: 'Email Address',
-  logoutButton: 'Logout',
-} as const;
+  welcomeBack: 'Welcome back,',
 
-export type StringsType = typeof Strings;
+  // Validation Errors
+  nameRequired: 'Please enter your name',
+  emailRequired: 'Please enter your email',
+  emailInvalid: 'Invalid email format',
+  passwordRequired: 'Please enter your password',
+  passwordTooShort: 'Minimum 6 characters required',
+
+  // Auth Errors
+  userNotRegistered: 'User not registered. Please sign up first.',
+  invalidPassword: 'Invalid password. Please try again.',
+  userAlreadyRegistered: 'User already registered. Please sign in.',
+  error: 'Error',
+  ok: 'OK',
+} as const;

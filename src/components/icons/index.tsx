@@ -1,10 +1,45 @@
 import React from 'react';
 import {View} from 'react-native';
+import Svg, {Path, Defs, LinearGradient, Stop, Circle, Ellipse} from 'react-native-svg';
 
 interface IconProps {
   size?: number;
   color?: string;
 }
+
+interface LogoIconProps {
+  size?: number;
+}
+
+export const LogoIcon = ({size = 80}: LogoIconProps) => (
+  <Svg width={size} height={size} viewBox="0 0 100 100">
+    <Defs>
+      <LinearGradient id="shieldGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+        <Stop offset="0%" stopColor="#C084FC" />
+        <Stop offset="50%" stopColor="#8B5CF6" />
+        <Stop offset="100%" stopColor="#6D28D9" />
+      </LinearGradient>
+    </Defs>
+    {/* Shield shape */}
+    <Path
+      d="M50 5 L90 20 L90 50 C90 75 70 90 50 95 C30 90 10 75 10 50 L10 20 Z"
+      fill="url(#shieldGradient)"
+    />
+    {/* User head */}
+    <Circle cx="50" cy="38" r="12" fill="white" />
+    {/* User body */}
+    <Ellipse cx="50" cy="60" rx="18" ry="10" fill="white" />
+    {/* Checkmark */}
+    <Path
+      d="M38 70 L46 78 L62 62"
+      stroke="#8B5CF6"
+      strokeWidth="4"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      fill="none"
+    />
+  </Svg>
+);
 
 interface EyeIconProps extends IconProps {
   visible?: boolean;
@@ -120,6 +155,22 @@ export const EyeIcon = ({size = 20, color = '#667EEA', visible = true}: EyeIconP
         }}
       />
     )}
+  </View>
+);
+
+export const CheckIcon = ({size = 20, color = '#22C55E'}: IconProps) => (
+  <View style={{width: size, height: size, justifyContent: 'center', alignItems: 'center'}}>
+    <View
+      style={{
+        width: size * 0.5,
+        height: size * 0.25,
+        borderLeftWidth: 2,
+        borderBottomWidth: 2,
+        borderColor: color,
+        transform: [{rotate: '-45deg'}],
+        marginTop: -size * 0.1,
+      }}
+    />
   </View>
 );
 

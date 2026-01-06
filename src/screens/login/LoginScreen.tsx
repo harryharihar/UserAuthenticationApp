@@ -3,41 +3,40 @@ import {
   StatusBar,
   View,
   Text,
-  TextInput,
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  Alert,
 } from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {MailIcon, LockIcon, EyeIcon} from '../../components/icons';
+import {MailIcon, LockIcon, EyeIcon, CheckIcon} from '../../components/icons';
+import {AppHeader, InputField, PrimaryButton, Card} from '../../components/common';
 import {Colors} from '../../constants/colors';
 import {Strings} from '../../constants/strings';
-import {styles} from './loginStyle';
+import {useAuth} from '../../context/AuthContext';
+import {styles} from './loginStyles';
 
 type RootStackParamList = {
   Login: undefined;
   SignUp: undefined;
-  Home: {name: string; email: string};
+  Home: undefined;
 };
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Login'>;
 
-const ICON_SIZE = 22;
-
 const LoginScreen: React.FC = () => {
   const navigation = useNavigation<NavigationProp>();
+  const {login} = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<{email?: string; password?: string}>({});
 
-  const validateEmail = (emailValue: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(emailValue);
-  };
+  const validateEmail = (value: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+  const isEmailValid = email.trim() !== '' && validateEmail(email.trim());
 
   const validateForm = useCallback(() => {
     const newErrors: {email?: string; password?: string} = {};
@@ -55,139 +54,81 @@ const LoginScreen: React.FC = () => {
     return Object.keys(newErrors).length === 0;
   }, [email, password]);
 
-  const handleLogin = useCallback(() => {
+  const handleLogin = useCallback(async () => {
     if (validateForm()) {
-      const userName = email.split('@')[0];
-      navigation.navigate('Home', {name: userName, email: email});
+      setIsLoading(true);
+      try {
+        const result = await login(email, password);
+        if (result.success) {
+          navigation.reset({index: 0, routes: [{name: 'Home'}]});
+        } else if (result.error === 'not_registered') {
+          Alert.alert(Strings.error, Strings.userNotRegistered, [{text: Strings.ok}]);
+        } else if (result.error === 'invalid_password') {
+          Alert.alert(Strings.error, Strings.invalidPassword, [{text: Strings.ok}]);
+        }
+      } finally {
+        setIsLoading(false);
+      }
     }
-  }, [email, navigation, validateForm]);
+  }, [email, password, login, navigation, validateForm]);
 
-  const handleSignUp = useCallback(() => {
-    navigation.navigate('SignUp');
-  }, [navigation]);
-
-  const togglePasswordVisibility = useCallback(() => {
-    setIsPasswordVisible(prev => !prev);
-  }, []);
+  const clearError = (field: 'email' | 'password') => {
+    if (errors[field]) setErrors(prev => ({...prev, [field]: undefined}));
+  };
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="dark-content" />
-
-      <View style={styles.backgroundDecoration}>
-        <View style={styles.circle1} />
-        <View style={styles.circle2} />
-        <View style={styles.circle3} />
-      </View>
-
-      <SafeAreaView style={styles.safeArea}>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          style={styles.keyboardView}>
-          <ScrollView
-            contentContainerStyle={styles.content}
-            showsVerticalScrollIndicator={false}
-            keyboardShouldPersistTaps="handled">
-            <View style={styles.logoContainer}>
-              <View style={styles.logoCircle}>
-                <Text style={styles.logoText}>{Strings.logoText}</Text>
-              </View>
-              <Text style={styles.appName}>{Strings.appName}</Text>
-              <Text style={styles.tagline}>{Strings.appTagline}</Text>
-            </View>
-
-            <View style={styles.formContainer}>
-              <Text style={styles.title}>{Strings.welcomeTitle}</Text>
-              <Text style={styles.subtitle}>{Strings.welcomeSubtitle}</Text>
-
-              <View
-                style={[
-                  styles.inputWrapper,
-                  errors.email && styles.inputWrapperError,
-                ]}>
-                <View style={styles.inputIcon}>
-                  <MailIcon size={ICON_SIZE} color={errors.email ? Colors.error : Colors.textSecondary} />
-                </View>
-                <TextInput
-                  style={styles.input}
-                  placeholder={Strings.emailPlaceholder}
-                  placeholderTextColor={Colors.textSecondary}
-                  value={email}
-                  onChangeText={text => {
-                    setEmail(text);
-                    if (errors.email) {
-                      setErrors(prev => ({...prev, email: undefined}));
-                    }
-                  }}
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  textContentType="oneTimeCode"
-                  autoComplete="off"
-                />
-              </View>
-              <View style={styles.errorContainer}>
-                {errors.email && (
-                  <Text style={styles.errorText}>{errors.email}</Text>
-                )}
-              </View>
-
-              <View
-                style={[
-                  styles.inputWrapper,
-                  errors.password && styles.inputWrapperError,
-                ]}>
-                <View style={styles.inputIcon}>
-                  <LockIcon size={ICON_SIZE} color={errors.password ? Colors.error : Colors.textSecondary} />
-                </View>
-                <TextInput
-                  style={styles.input}
-                  placeholder={Strings.passwordPlaceholder}
-                  placeholderTextColor={Colors.textSecondary}
-                  value={password}
-                  onChangeText={text => {
-                    setPassword(text);
-                    if (errors.password) {
-                      setErrors(prev => ({...prev, password: undefined}));
-                    }
-                  }}
-                  secureTextEntry={!isPasswordVisible}
-                  textContentType="oneTimeCode"
-                  autoComplete="off"
-                />
-                <TouchableOpacity
-                  style={styles.eyeButton}
-                  onPress={togglePasswordVisibility}>
-                  <EyeIcon
-                    size={ICON_SIZE}
-                    color={Colors.primary}
-                    visible={isPasswordVisible}
-                  />
-                </TouchableOpacity>
-              </View>
-              <View style={styles.errorContainer}>
-                {errors.password && (
-                  <Text style={styles.errorText}>{errors.password}</Text>
-                )}
-              </View>
-
-              <TouchableOpacity
-                style={styles.loginButton}
+      <StatusBar barStyle="light-content" translucent backgroundColor="transparent" />
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.flex}>
+        <ScrollView
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled">
+          <AppHeader screenTitle={Strings.loginTitle} />
+          <View style={styles.formSection}>
+            <Card>
+              <InputField
+                label="Email Address"
+                icon={<MailIcon size={20} color={errors.email ? Colors.error : Colors.textSecondary} />}
+                placeholder={Strings.emailPlaceholder}
+                value={email}
+                onChangeText={text => { setEmail(text); clearError('email'); }}
+                keyboardType="email-address"
+                autoCapitalize="none"
+                error={errors.email}
+                rightIcon={isEmailValid ? <CheckIcon size={20} color={Colors.success} /> : undefined}
+                editable={!isLoading}
+              />
+              <InputField
+                label="Password"
+                icon={<LockIcon size={20} color={errors.password ? Colors.error : Colors.textSecondary} />}
+                placeholder={Strings.passwordPlaceholder}
+                value={password}
+                onChangeText={text => { setPassword(text); clearError('password'); }}
+                secureTextEntry={!isPasswordVisible}
+                error={errors.password}
+                rightIcon={<EyeIcon size={20} color={Colors.textSecondary} visible={isPasswordVisible} />}
+                onRightIconPress={() => setIsPasswordVisible(prev => !prev)}
+                editable={!isLoading}
+              />
+              <PrimaryButton
+                title={Strings.logInButton}
                 onPress={handleLogin}
-                activeOpacity={0.8}>
-                <Text style={styles.loginButtonText}>{Strings.signInButton}</Text>
+                isLoading={isLoading}
+                style={styles.button}
+              />
+            </Card>
+            <View style={styles.linkContainer}>
+              <Text style={styles.linkText}>{Strings.noAccountText}</Text>
+              <TouchableOpacity onPress={() => navigation.navigate('SignUp')} disabled={isLoading}>
+                <Text style={styles.link}>{Strings.signUpLink}</Text>
               </TouchableOpacity>
-
-              <View style={styles.signUpContainer}>
-                <Text style={styles.signUpText}>{Strings.noAccountText}</Text>
-                <TouchableOpacity onPress={handleSignUp}>
-                  <Text style={styles.signUpLink}>{Strings.signUpLink}</Text>
-                </TouchableOpacity>
-              </View>
             </View>
-          </ScrollView>
-        </KeyboardAvoidingView>
-      </SafeAreaView>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </View>
   );
 };

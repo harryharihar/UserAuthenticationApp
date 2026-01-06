@@ -3,48 +3,44 @@ import {
   StatusBar,
   View,
   Text,
-  TextInput,
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  Alert,
 } from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {UserIcon, MailIcon, LockIcon, EyeIcon} from '../../components/icons';
+import {AppHeader, InputField, PrimaryButton, Card} from '../../components/common';
 import {Colors} from '../../constants/colors';
 import {Strings} from '../../constants/strings';
-import {styles} from './signUpStyle';
+import {useAuth} from '../../context/AuthContext';
+import {styles} from './signUpStyles';
 
 type RootStackParamList = {
   Login: undefined;
   SignUp: undefined;
-  Home: {name: string; email: string};
+  Home: undefined;
 };
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'SignUp'>;
 
-const ICON_SIZE = 22;
-
 const SignUpScreen: React.FC = () => {
   const navigation = useNavigation<NavigationProp>();
+  const {signup} = useAuth();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<{name?: string; email?: string; password?: string}>({});
 
-  const validateEmail = (emailValue: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(emailValue);
-  };
+  const validateEmail = (value: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 
   const validateForm = useCallback(() => {
     const newErrors: {name?: string; email?: string; password?: string} = {};
-    if (!name.trim()) {
-      newErrors.name = Strings.nameRequired;
-    }
+    if (!name.trim()) newErrors.name = Strings.nameRequired;
     if (!email.trim()) {
       newErrors.email = Strings.emailRequired;
     } else if (!validateEmail(email.trim())) {
@@ -59,169 +55,88 @@ const SignUpScreen: React.FC = () => {
     return Object.keys(newErrors).length === 0;
   }, [name, email, password]);
 
-  const handleSignUp = useCallback(() => {
+  const handleSignUp = useCallback(async () => {
     if (validateForm()) {
-      navigation.navigate('Home', {name: name, email: email});
+      setIsLoading(true);
+      try {
+        const result = await signup(name, email, password);
+        if (result.success) {
+          navigation.reset({index: 0, routes: [{name: 'Home'}]});
+        } else if (result.error === 'already_registered') {
+          Alert.alert(Strings.error, Strings.userAlreadyRegistered, [{text: Strings.ok}]);
+        }
+      } finally {
+        setIsLoading(false);
+      }
     }
-  }, [name, email, navigation, validateForm]);
+  }, [name, email, password, signup, navigation, validateForm]);
 
-  const handleSignIn = useCallback(() => {
-    navigation.navigate('Login');
-  }, [navigation]);
-
-  const togglePasswordVisibility = useCallback(() => {
-    setIsPasswordVisible(prev => !prev);
-  }, []);
+  const clearError = (field: 'name' | 'email' | 'password') => {
+    if (errors[field]) setErrors(prev => ({...prev, [field]: undefined}));
+  };
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="dark-content" />
-
-      <View style={styles.backgroundDecoration}>
-        <View style={styles.circle1} />
-        <View style={styles.circle2} />
-        <View style={styles.circle3} />
-      </View>
-
-      <SafeAreaView style={styles.safeArea}>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          style={styles.keyboardView}>
-          <ScrollView
-            contentContainerStyle={styles.content}
-            showsVerticalScrollIndicator={false}
-            keyboardShouldPersistTaps="handled">
-            <View style={styles.logoContainer}>
-              <View style={styles.logoCircle}>
-                <Text style={styles.logoText}>{Strings.logoText}</Text>
-              </View>
-              <Text style={styles.appName}>{Strings.appName}</Text>
-              <Text style={styles.tagline}>{Strings.appTagline}</Text>
-            </View>
-
-            <View style={styles.formContainer}>
-              <Text style={styles.title}>{Strings.signUpTitle}</Text>
-              <Text style={styles.subtitle}>{Strings.signUpSubtitle}</Text>
-
-              <View
-                style={[
-                  styles.inputWrapper,
-                  errors.name && styles.inputWrapperError,
-                ]}>
-                <View style={styles.inputIcon}>
-                  <UserIcon size={ICON_SIZE} color={errors.name ? Colors.error : Colors.textSecondary} />
-                </View>
-                <TextInput
-                  style={styles.input}
-                  placeholder={Strings.namePlaceholder}
-                  placeholderTextColor={Colors.textSecondary}
-                  value={name}
-                  onChangeText={text => {
-                    setName(text);
-                    if (errors.name) {
-                      setErrors(prev => ({...prev, name: undefined}));
-                    }
-                  }}
-                  autoCapitalize="words"
-                  autoCorrect={false}
-                  textContentType="oneTimeCode"
-                  autoComplete="off"
-                />
-              </View>
-              <View style={styles.errorContainer}>
-                {errors.name && (
-                  <Text style={styles.errorText}>{errors.name}</Text>
-                )}
-              </View>
-
-              <View
-                style={[
-                  styles.inputWrapper,
-                  errors.email && styles.inputWrapperError,
-                ]}>
-                <View style={styles.inputIcon}>
-                  <MailIcon size={ICON_SIZE} color={errors.email ? Colors.error : Colors.textSecondary} />
-                </View>
-                <TextInput
-                  style={styles.input}
-                  placeholder={Strings.emailPlaceholder}
-                  placeholderTextColor={Colors.textSecondary}
-                  value={email}
-                  onChangeText={text => {
-                    setEmail(text);
-                    if (errors.email) {
-                      setErrors(prev => ({...prev, email: undefined}));
-                    }
-                  }}
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                  textContentType="oneTimeCode"
-                  autoComplete="off"
-                />
-              </View>
-              <View style={styles.errorContainer}>
-                {errors.email && (
-                  <Text style={styles.errorText}>{errors.email}</Text>
-                )}
-              </View>
-
-              <View
-                style={[
-                  styles.inputWrapper,
-                  errors.password && styles.inputWrapperError,
-                ]}>
-                <View style={styles.inputIcon}>
-                  <LockIcon size={ICON_SIZE} color={errors.password ? Colors.error : Colors.textSecondary} />
-                </View>
-                <TextInput
-                  style={styles.input}
-                  placeholder={Strings.passwordPlaceholder}
-                  placeholderTextColor={Colors.textSecondary}
-                  value={password}
-                  onChangeText={text => {
-                    setPassword(text);
-                    if (errors.password) {
-                      setErrors(prev => ({...prev, password: undefined}));
-                    }
-                  }}
-                  secureTextEntry={!isPasswordVisible}
-                  textContentType="oneTimeCode"
-                  autoComplete="off"
-                />
-                <TouchableOpacity
-                  style={styles.eyeButton}
-                  onPress={togglePasswordVisibility}>
-                  <EyeIcon
-                    size={ICON_SIZE}
-                    color={Colors.primary}
-                    visible={isPasswordVisible}
-                  />
-                </TouchableOpacity>
-              </View>
-              <View style={styles.errorContainer}>
-                {errors.password && (
-                  <Text style={styles.errorText}>{errors.password}</Text>
-                )}
-              </View>
-
-              <TouchableOpacity
-                style={styles.signUpButton}
+      <StatusBar barStyle="light-content" translucent backgroundColor="transparent" />
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.flex}>
+        <ScrollView
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled">
+          <AppHeader screenTitle={Strings.createAccountTitle} logoSize={48} />
+          <View style={styles.formSection}>
+            <Card>
+              <InputField
+                label="Full Name"
+                icon={<UserIcon size={20} color={errors.name ? Colors.error : Colors.textSecondary} />}
+                placeholder={Strings.namePlaceholder}
+                value={name}
+                onChangeText={text => { setName(text); clearError('name'); }}
+                autoCapitalize="words"
+                error={errors.name}
+                editable={!isLoading}
+              />
+              <InputField
+                label="Email Address"
+                icon={<MailIcon size={20} color={errors.email ? Colors.error : Colors.textSecondary} />}
+                placeholder={Strings.emailPlaceholder}
+                value={email}
+                onChangeText={text => { setEmail(text); clearError('email'); }}
+                keyboardType="email-address"
+                autoCapitalize="none"
+                error={errors.email}
+                editable={!isLoading}
+              />
+              <InputField
+                label="Password"
+                icon={<LockIcon size={20} color={errors.password ? Colors.error : Colors.textSecondary} />}
+                placeholder={Strings.passwordPlaceholder}
+                value={password}
+                onChangeText={text => { setPassword(text); clearError('password'); }}
+                secureTextEntry={!isPasswordVisible}
+                error={errors.password}
+                rightIcon={<EyeIcon size={20} color={Colors.textSecondary} visible={isPasswordVisible} />}
+                onRightIconPress={() => setIsPasswordVisible(prev => !prev)}
+                editable={!isLoading}
+              />
+              <PrimaryButton
+                title={Strings.signUpButton}
                 onPress={handleSignUp}
-                activeOpacity={0.8}>
-                <Text style={styles.signUpButtonText}>{Strings.signUpButton}</Text>
+                isLoading={isLoading}
+                style={styles.button}
+              />
+            </Card>
+            <View style={styles.linkContainer}>
+              <Text style={styles.linkText}>{Strings.haveAccountText}</Text>
+              <TouchableOpacity onPress={() => navigation.navigate('Login')} disabled={isLoading}>
+                <Text style={styles.link}>{Strings.loginLink}</Text>
               </TouchableOpacity>
-
-              <View style={styles.signInContainer}>
-                <Text style={styles.signInText}>{Strings.haveAccountText}</Text>
-                <TouchableOpacity onPress={handleSignIn}>
-                  <Text style={styles.signInLink}>{Strings.signInLink}</Text>
-                </TouchableOpacity>
-              </View>
             </View>
-          </ScrollView>
-        </KeyboardAvoidingView>
-      </SafeAreaView>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </View>
   );
 };

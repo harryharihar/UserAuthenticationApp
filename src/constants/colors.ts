@@ -1,35 +1,23 @@
 export const Colors = {
   // Primary colors
-  primary: '#6C63FF',
-  primaryDark: '#5A52D5',
+  primary: '#8B5CF6',
+  primaryDark: '#6D28D9',
 
   // Background colors
   background: '#F5F5F5',
-  backgroundLight: '#FFFFFF',
-  cardBackground: '#FFFFFF',
+  white: '#FFFFFF',
+  black: '#000000',
 
   // Text colors
   textDark: '#111111',
   textPrimary: '#222222',
-  textSecondary: '#555555',
-  textMuted: '#777777',
+  textSecondary: '#9CA3AF',
+  textMuted: '#6B7280',
 
   // Input colors
-  inputBackground: '#FFFFFF',
-  inputBorder: '#E0E0E0',
-  inputFocused: 'rgba(108,99,255,0.2)',
+  inputBorder: '#E5E7EB',
 
-  // Utility colors
-  white: '#FFFFFF',
-  black: '#000000',
-
-  // Overlay colors
-  overlayPurple: 'rgba(108,99,255,0.08)',
-  overlayPink: 'rgba(255,107,107,0.06)',
-
-  // Error colors
+  // Status colors
+  success: '#22C55E',
   error: '#DC3545',
-  errorBorder: '#DC3545',
 } as const;
-
-export type ColorType = typeof Colors;
