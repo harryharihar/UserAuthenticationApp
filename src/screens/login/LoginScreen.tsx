@@ -8,6 +8,7 @@ import {
   Platform,
   ScrollView,
   Alert,
+  Keyboard,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -63,6 +64,7 @@ const LoginScreen: React.FC = () => {
   }, [email, password]);
 
   const handleLogin = useCallback(async () => {
+    Keyboard.dismiss();
     if (validateForm()) {
       setIsLoading(true);
       try {
@@ -123,9 +125,6 @@ const LoginScreen: React.FC = () => {
                 }}
                 keyboardType="email-address"
                 autoCapitalize="none"
-                autoComplete="off"
-                textContentType="none"
-                importantForAutofill="no"
                 error={errors.email}
                 rightIcon={
                   isEmailValid ? (
@@ -151,9 +150,6 @@ const LoginScreen: React.FC = () => {
                   clearError('password');
                 }}
                 secureTextEntry={!isPasswordVisible}
-                autoComplete="off"
-                textContentType="none"
-                importantForAutofill="no"
                 error={errors.password}
                 rightIcon={
                   <EyeIcon

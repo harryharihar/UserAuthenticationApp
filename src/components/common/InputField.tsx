@@ -33,10 +33,10 @@ export const InputField: React.FC<InputFieldProps> = ({
         <TextInput
           style={styles.input}
           placeholderTextColor={Colors.textSecondary}
+          {...textInputProps}
           autoComplete="off"
           importantForAutofill="no"
           textContentType="none"
-          {...textInputProps}
         />
         {rightIcon && (
           <TouchableOpacity style={styles.rightIcon} onPress={onRightIconPress}>

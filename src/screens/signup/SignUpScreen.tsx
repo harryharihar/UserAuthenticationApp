@@ -8,6 +8,7 @@ import {
   Platform,
   ScrollView,
   Alert,
+  Keyboard,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -66,6 +67,7 @@ const SignUpScreen: React.FC = () => {
   }, [name, email, password]);
 
   const handleSignUp = useCallback(async () => {
+    Keyboard.dismiss();
     if (validateForm()) {
       setIsLoading(true);
       try {
@@ -123,9 +125,6 @@ const SignUpScreen: React.FC = () => {
                 autoCapitalize="words"
                 error={errors.name}
                 editable={!isLoading}
-                autoComplete="off"
-                textContentType="none"
-                importantForAutofill="no"
               />
               <InputField
                 label="Email Address"
@@ -145,9 +144,6 @@ const SignUpScreen: React.FC = () => {
                 autoCapitalize="none"
                 error={errors.email}
                 editable={!isLoading}
-                autoComplete="off"
-                textContentType="emailAddress"
-                importantForAutofill="no"
               />
               <InputField
                 label="Password"
@@ -176,9 +172,6 @@ const SignUpScreen: React.FC = () => {
                 }
                 onRightIconPress={() => setIsPasswordVisible(prev => !prev)}
                 editable={!isLoading}
-                autoComplete="off"
-                textContentType="oneTimeCode"
-                importantForAutofill="no"
               />
               <PrimaryButton
                 title={Strings.signUpButton}

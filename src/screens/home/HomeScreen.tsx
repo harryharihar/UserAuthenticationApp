@@ -1,5 +1,5 @@
-import React, { useCallback } from 'react';
-import { StatusBar, View, Text, ScrollView } from 'react-native';
+import React, { useCallback, useEffect } from 'react';
+import { StatusBar, View, Text, ScrollView, Keyboard } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { UserIcon, MailIcon, LogoutIcon } from '../../components/icons';
@@ -20,6 +20,10 @@ type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Home'>;
 const HomeScreen: React.FC = () => {
   const navigation = useNavigation<NavigationProp>();
   const { user, logout } = useAuth();
+
+  useEffect(() => {
+    Keyboard.dismiss();
+  }, []);
 
   const handleLogout = useCallback(() => {
     logout();

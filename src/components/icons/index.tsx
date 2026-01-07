@@ -20,16 +20,12 @@ export const LogoIcon = ({size = 80}: LogoIconProps) => (
         <Stop offset="100%" stopColor="#6D28D9" />
       </LinearGradient>
     </Defs>
-    {/* Shield shape */}
     <Path
       d="M50 5 L90 20 L90 50 C90 75 70 90 50 95 C30 90 10 75 10 50 L10 20 Z"
       fill="url(#shieldGradient)"
     />
-    {/* User head */}
     <Circle cx="50" cy="38" r="12" fill="white" />
-    {/* User body */}
     <Ellipse cx="50" cy="60" rx="18" ry="10" fill="white" />
-    {/* Checkmark */}
     <Path
       d="M38 70 L46 78 L62 62"
       stroke="#8B5CF6"

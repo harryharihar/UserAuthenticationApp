@@ -17,17 +17,9 @@ export type RootStackParamList = {
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
-/**
- * AppNavigator Component
- *
- * Handles navigation based on authentication state.
- * Shows a loading screen while checking for persisted auth,
- * then navigates to Home if user is logged in, or Login if not.
- */
 const AppNavigator: React.FC = () => {
   const { isLoading, isAuthenticated } = useAuth();
 
-  // Show loading screen while checking persisted auth state
   if (isLoading) {
     return (
       <View style={styles.loadingContainer}>
