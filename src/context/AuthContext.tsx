@@ -69,8 +69,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
         if (savedRegisteredUsers) {
           setRegisteredUsers(JSON.parse(savedRegisteredUsers));
         }
-      } catch (error) {
-        console.error('Error loading persisted auth state:', error);
+      } catch {
       } finally {
         setIsLoading(false);
       }
@@ -104,8 +103,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
       await AsyncStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(loggedInUser));
 
       return {success: true};
-    } catch (error) {
-      console.error('Login error:', error);
+    } catch {
       return {success: false, error: 'not_registered'};
     }
   }, [registeredUsers]);
@@ -143,8 +141,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
       ]);
 
       return {success: true};
-    } catch (error) {
-      console.error('Signup error:', error);
+    } catch {
       return {success: false};
     }
   }, [registeredUsers]);
@@ -153,8 +150,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
     setUser(null);
     try {
       await AsyncStorage.removeItem(STORAGE_KEYS.USER);
-    } catch (error) {
-      console.error('Error clearing user from storage:', error);
+    } catch {
     }
   }, []);
 

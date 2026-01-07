@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, ActivityIndicator, StyleSheet, LogBox } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -8,6 +8,8 @@ import { Colors } from './src/constants/colors';
 import LoginScreen from './src/screens/login/LoginScreen';
 import SignUpScreen from './src/screens/signup/SignUpScreen';
 import HomeScreen from './src/screens/home/HomeScreen';
+
+LogBox.ignoreAllLogs();
 
 export type RootStackParamList = {
   Login: undefined;

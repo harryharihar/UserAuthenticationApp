@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import {
   StatusBar,
   View,
@@ -9,6 +9,8 @@ import {
   ScrollView,
   Alert,
   Keyboard,
+  TextInput,
+  InteractionManager,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -35,6 +37,7 @@ type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'SignUp'>;
 const SignUpScreen: React.FC = () => {
   const navigation = useNavigation<NavigationProp>();
   const { signup } = useAuth();
+  const nameInputRef = useRef<TextInput>(null);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -45,6 +48,13 @@ const SignUpScreen: React.FC = () => {
     email?: string;
     password?: string;
   }>({});
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      nameInputRef.current?.focus();
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
 
   const validateEmail = (value: string) =>
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
@@ -73,7 +83,12 @@ const SignUpScreen: React.FC = () => {
       try {
         const result = await signup(name, email, password);
         if (result.success) {
-          navigation.reset({ index: 0, routes: [{ name: 'Home' }] });
+          setName('');
+          setEmail('');
+          setPassword('');
+          InteractionManager.runAfterInteractions(() => {
+            navigation.reset({ index: 0, routes: [{ name: 'Home' }] });
+          });
         } else if (result.error === 'already_registered') {
           Alert.alert(Strings.error, Strings.userAlreadyRegistered, [
             { text: Strings.ok },
@@ -109,6 +124,7 @@ const SignUpScreen: React.FC = () => {
           <View style={styles.formSection}>
             <Card>
               <InputField
+                ref={nameInputRef}
                 label="Full Name"
                 icon={
                   <UserIcon

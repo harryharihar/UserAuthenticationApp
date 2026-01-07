@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import {
   View,
   Text,
@@ -17,36 +17,35 @@ interface InputFieldProps extends Omit<TextInputProps, 'style'> {
   onRightIconPress?: () => void;
 }
 
-export const InputField: React.FC<InputFieldProps> = ({
-  label,
-  icon,
-  error,
-  rightIcon,
-  onRightIconPress,
-  ...textInputProps
-}) => {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.label}>{label}</Text>
-      <View style={[styles.inputWrapper, error && styles.inputWrapperError]}>
-        <View style={styles.icon}>{icon}</View>
-        <TextInput
-          style={styles.input}
-          placeholderTextColor={Colors.textSecondary}
-          {...textInputProps}
-          autoComplete="off"
-          importantForAutofill="no"
-          textContentType="none"
-        />
-        {rightIcon && (
-          <TouchableOpacity style={styles.rightIcon} onPress={onRightIconPress}>
-            {rightIcon}
-          </TouchableOpacity>
-        )}
+export const InputField = forwardRef<TextInput, InputFieldProps>(
+  ({ label, icon, error, rightIcon, onRightIconPress, ...textInputProps }, ref) => {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.label}>{label}</Text>
+        <View style={[styles.inputWrapper, error && styles.inputWrapperError]}>
+          <View style={styles.icon}>{icon}</View>
+          <TextInput
+            ref={ref}
+            style={styles.input}
+            placeholderTextColor={Colors.textSecondary}
+            {...textInputProps}
+            autoComplete="off"
+            importantForAutofill="no"
+            textContentType="oneTimeCode"
+            autoCorrect={false}
+            spellCheck={false}
+            passwordRules=""
+          />
+          {rightIcon && (
+            <TouchableOpacity style={styles.rightIcon} onPress={onRightIconPress}>
+              {rightIcon}
+            </TouchableOpacity>
+          )}
+        </View>
+        <View style={styles.errorContainer}>
+          {error && <Text style={styles.errorText}>{error}</Text>}
+        </View>
       </View>
-      <View style={styles.errorContainer}>
-        {error && <Text style={styles.errorText}>{error}</Text>}
-      </View>
-    </View>
-  );
-};
+    );
+  }
+);

@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import {
   StatusBar,
   View,
@@ -9,6 +9,8 @@ import {
   ScrollView,
   Alert,
   Keyboard,
+  TextInput,
+  InteractionManager,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -35,6 +37,7 @@ type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Login'>;
 const LoginScreen: React.FC = () => {
   const navigation = useNavigation<NavigationProp>();
   const { login } = useAuth();
+  const emailInputRef = useRef<TextInput>(null);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -42,6 +45,13 @@ const LoginScreen: React.FC = () => {
   const [errors, setErrors] = useState<{ email?: string; password?: string }>(
     {},
   );
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      emailInputRef.current?.focus();
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
 
   const validateEmail = (value: string) =>
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
@@ -70,7 +80,11 @@ const LoginScreen: React.FC = () => {
       try {
         const result = await login(email, password);
         if (result.success) {
-          navigation.reset({ index: 0, routes: [{ name: 'Home' }] });
+          setEmail('');
+          setPassword('');
+          InteractionManager.runAfterInteractions(() => {
+            navigation.reset({ index: 0, routes: [{ name: 'Home' }] });
+          });
         } else if (result.error === 'not_registered') {
           Alert.alert(Strings.error, Strings.userNotRegistered, [
             { text: Strings.ok },
@@ -110,6 +124,7 @@ const LoginScreen: React.FC = () => {
           <View style={styles.formSection}>
             <Card>
               <InputField
+                ref={emailInputRef}
                 label="Email Address"
                 icon={
                   <MailIcon
